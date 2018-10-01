@@ -737,14 +737,15 @@
                 return xscale(e.deaths/20);})
             .on("click",function(e){
                     var day = e.date;
-                    console.log(day);
-                    console.log(e.date);
+                    var day1 = new Date(e.date);
+                    //console.log(day);
+                    //console.log(e.date);
                     deathTimesvg.selectAll(".bar")
                         .style("fill","#11324a")
                         .filter(function(e){return e.date==day;}) 
                         .style("fill", "#fa4a21");
-                    	newData = dthas.filter(function(e){console.log(e.date==day); return e.date==day;}); 
-                    	console.log(newData);
+                    	newData = dthas.filter(function(e){var lday= new Date(e.date); return lday<=day1;}); 
+                    	//console.log(newData);
                        
                     newRows= deathLocsvg.selectAll("circle")
 								        .data(newData);
