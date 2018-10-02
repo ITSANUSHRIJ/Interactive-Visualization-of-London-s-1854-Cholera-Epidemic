@@ -54,9 +54,33 @@
         	<h4><a href="Document.html" target="_blank" title="">H517-Project1-Documentation </a></br>
         	<a href="https://youtu.be/pUaQLmR_gIQ" target="_blank" title="">Interactive Visualization Youtube Video</a></h4></br>
         </section>
-  </div>  
+        
+  </div>
+
+  
 	
-  <div class="row">
+<div class="container">
+  <center><p>
+  		<label for="DayFirst" 
+         	style="display: inline-block; width: 240px; text-align: right">
+         	First Day = <span id="DayFirst-value">…</span>
+  		</label>
+  		<input type="range" min="1" max="42" id="DayFirst">
+	</p>
+
+	<p>
+  		<label for="DayLast" 
+         	style="display: inline-block; width: 240px; text-align: right">
+         	Last Day = <span id="DayLast-value">…</span>
+  		</label>
+  		<input type="range" min="1" max="42" id="DayLast">
+	</p>
+	<div id="option">
+    	<input name="updateButton" 
+           	type="button" 
+           	value="Update Map" 
+           	onclick="updateData(DayFirst,DayLast)" />
+	</div></center>
 	<div class="col-lg-8" id="main_panel">
 		<button id="centerBtn">
 				<input name="updateButton" 
@@ -66,9 +90,10 @@
            				onclick="updateDeaths()" />
 		</button>
 	</div>
-	<div class="col-lg-8" id="chart_panel">
+  <div class="col-lg-8" id="chart_panel">
+	  
 	</div>
-  </div>
+</div>
 	
 	<script>
 
@@ -76,7 +101,7 @@
 		var y;
 		
 		var width = 740
-		var height = 780
+		var height = 600
 		var barPadding = 1;
 		var margin = {"top": 30, "right": 20, "bottom": 20, "left": 20};
                 widthChart = 400- margin.left - margin.right,
@@ -117,10 +142,10 @@
 			var lineSvg = svg.append("g").attr("class", "mapSvg");
             var lineSvg2 = svg.append("g").attr("class", "mapSvg");
             var streetSvg = svg.append("g").attr("class","mapSvg");
-            var street = [{name:'CEORCE STREET',x:120,y:422,rotate:72},{name:'BREWER STREET',x:355,y:590,rotate:-43},
-              {name:'RECENT STREET',x:235,y:450,rotate:60},{name:'OXFORD STREET',x:298,y:279,rotate:-10},
-              {name:'DEAN STREET',x:490,y:289,rotate:66},{name:'WORK',x:321.5,y:379,rotate:-23},
-              {name:'HOUSE',x:325,y:392,rotate:-23},{name:'Brewry.',x:411,y:412,rotate:65}]
+            var street = [{name:'CEORCE STREET',x:120,y:242,rotate:72},{name:'BREWER STREET',x:355,y:410,rotate:-43},
+              {name:'RECENT STREET',x:235,y:270,rotate:60},{name:'OXFORD STREET',x:298,y:99,rotate:-10},
+              {name:'DEAN STREET',x:490,y:109,rotate:66},{name:'WORK',x:321.5,y:199,rotate:-23},
+              {name:'HOUSE',x:325,y:212,rotate:-23},{name:'Brewry.',x:411,y:232,rotate:65}]
 			
 			
 			var pathGenerator=d3.svg.line()
@@ -180,7 +205,7 @@
                 .attr("class", "reset")
                 .attr("float","left")
                 .attr("x", width-400)
-                .attr("y", 690)
+                .attr("y", 530)
                 .append("xhtml:body")
                 .html(function(d){ return "<form><input type=button class=button1 value= "+"Reset"+" /></form>"})
                  .on("click",function(){
@@ -261,6 +286,8 @@
                 	.duration(500)		
                 	.style("opacity", 0);	
         	});
+        	
+        	
         	
         
         	
@@ -738,19 +765,22 @@
             .on("click",function(e){
                     var day = e.date;
                     var day1 = new Date(e.date);
-                    //console.log(day);
-                    //console.log(e.date);
+                    console.log(day);
+                    console.log(e.date);
                     deathTimesvg.selectAll(".bar")
                         .style("fill","#11324a")
                         .filter(function(e){return e.date==day;}) 
                         .style("fill", "#fa4a21");
+                    	//newData = dthas.filter(function(e){console.log(e.date==day); return e.date==day;}); 
+                    	//console.log(newData);
                     	newData = dthas.filter(function(e){var lday= new Date(e.date); return lday<=day1;}); 
                     	//console.log(newData);
-                       
+                    	
+                    	
                     newRows= deathLocsvg.selectAll("circle")
 								        .data(newData);
-								        
-						//console.log(newRows);		
+
+                        console.log(newRows);     	
 						newRows.enter().append("circle")
 								.style("fill",function(e)
 								{
@@ -764,10 +794,12 @@
     							}
     							})
 								.attr("r",3)
+								.attr("id","death1")
 								.style("stroke-width", "0.9")
             					.style("stroke", "04172b")
 								.attr("cx",function(e){return e.x *30})
 								.attr("cy",function(e){return height- e.y *30})
+								.classed("pin", true)
 								.on("mouseover", function(e) {if(e.gender == "0") { genderN = "Male";} else { genderN= "Female";}
 									if(e.age == "0") { ageN = "0-10";} else if(e.age == "1") { ageN= "11-20";}else if(e.age == "2") { ageN= "21-40";}else if(e.age == "3") { ageN= "41-60";} else if(e.age == "4") { ageN= "61-80";} else { ageN= ">80";}	
             							div.transition()		
@@ -782,8 +814,11 @@
             							div.transition()		
                 						.duration(500)		
                 						.style("opacity", 0);	
-        						}); 
-        				newRows.exit().remove();
+        						});
+        						 
+        					newRows.exit().remove();
+        					
+        				
         });
         
      
@@ -801,66 +836,37 @@
             })
             .text(function (e) {
                 return e.deaths;
-            });    
+            }); 
+            
+            
+         d3.select("#DayFirst").on("input", function() {
+  			    DayFirst=this.value
+			    updateDayFirst(+this.value);
+			 });
+		d3.select("#DayLast").on("input", function() {
+  			    DayLast=this.value
+			    updateDayLast(+this.value);
+			 });
+			 
+			  // Update the Day1 attributes
+			function updateDayFirst(DayFirst) {
+  			  // adjust the text on the range slider
+  			  d3.select("#DayFirst-value").text(DayFirst);
+  			  d3.select("#DayFirst").property("value", DayFirst);
+			
+			}
+			// Update the Day2 attributes
+			function updateDayLast(DayLast) {
+			  // adjust the text on the range slider
+  			  d3.select("#DayLast-value").text(DayLast);
+  			  d3.select("#DayLast").property("value", DayLast);
+			  
+  			  }   
 		}
 		
 		function updateDeaths()
 		{
 		                                      
-                 /*   var choices = [];
-                    d3.selectAll(".bar").each(function(e){
-                        cb = this; //console.log(d3.select(this)); 
-                        if(cb.checked){
-                            choices.push(cb.id);
-                        }
-                    });
-      				console.log(choices); 
-                    if(choices.length > 0){
-                        newData = dthas.filter(function(e){return choices.includes(e.date);}) 
-                        newDataBar = deathdays.filter(function(e){return choices.includes(e.date);})                                  
-                    } else {
-                        newData = dthas;
-                        newDataBar = deathdays;     
-                    } 
-                    //newDataFemale = newData.filter(function(d){return d.properties.sex == "female"});
-                    //newDataMale = newData.filter(function(d){return d.properties.sex == "male"});
-                   console.log(newData);
-                   //console.log(newDataMale);
-                                    
-                      newRows = deathLocsvg.selectAll("circle")
-                                      .data(newData);
-                      newRows.enter()
-                              .append("circle")
-                              .attr("r", 2)
-                              .attr("opacity", "0.9")
-                              .attr("transform", function(d) {
-                                  //whatever transformation that needs to be done
-                                  return "translate(" + projection(d.geometry.coordinates) + ")";
-                              })
-                              .style("fill", function(d){return d.properties.color;})
-                              .style("stroke-width", "0.9")
-                              .style("stroke", "04172b")
-                              .classed("pin", true);  
-                      
-          newRowsFemale.exit().remove();
-                    
-          
-                      newRowsMale = deathSvg.selectAll("rect")
-                                      .data(newDataMale,function(d){return d.id;});
-                      newRowsMale.enter()
-                              .append("rect")
-                              .attr("width", 3)
-                              .attr("height",3)
-                              .attr("opacity", "0.9")
-                              .attr("transform", function(d) {
-                                  //whatever transformation that needs to be done
-                                  return "translate(" + projection(d.geometry.coordinates) + ")";
-                              })
-                              .style("fill", function(d){return d.properties.color;})
-                              .style("stroke-width", "0.5")
-                              .style("stroke", "04172b");                      
-                      newRowsMale.exit().remove();               
-                deathdayChart.selectAll(".chartBar").style("fill", '#11324a'); */
             
             d3.csv('deaths_age_sex.csv', function(error,dthas) 
 			{		
@@ -909,7 +915,60 @@
         		});
 				});
                     
-            }            
+            } 
+            
+        function drawDeaths(dthas) 
+        {
+        	//deathLocsvg.exit().remove();
+        	
+        	var x = d3.scale.linear();
+			var y = d3.scale.linear();
+			var age = d3.scale.linear();
+			var gender = d3.scale.linear();
+			
+			var circles= deathLocsvg.selectAll("circle")
+								        .data(dthas);
+
+			
+			
+			circles.enter().append("circle")
+			.style("fill",function(e) 
+			{
+    			if(e.gender == "0") 
+    			{
+        			return "4169e1";
+    			} 
+    			else 
+    			{
+        			return "orange";
+    			}
+    		}
+    		)
+    		.style("stroke-width", "0.9")
+            .style("stroke", "04172b")
+			.attr("r",3)
+			.attr("cx",function(e){return e.x *30})
+			.attr("cy",function(e){return height- e.y *30})
+			.on("mouseover", function(e) {if(e.gender == "0") { genderN = "Male";} else { genderN= "Female";}
+				if(e.age == "0") { ageN = "0-10";} else if(e.age == "1") { ageN= "11-20";}else if(e.age == "2") { ageN= "21-40";}else if(e.age == "3") { ageN= "41-60";} else if(e.age == "4") { ageN= "61-80";} else { ageN= ">80";}	
+            	div.transition()		
+                	.duration(200)		
+                	.style("opacity", .9);
+                			
+            	div	.html("Age:"+ageN + "<br/>"  +"Gender:"+genderN)
+                	.style("left", (d3.event.pageX) + "px")		
+                	.style("top", (d3.event.pageY - 28) + "px");	
+            	})					
+        	.on("mouseout", function(e) {		
+            	div.transition()		
+                	.duration(500)		
+                	.style("opacity", 0);	
+        	});
+        	
+        	circles.exit().remove();
+        } 
+                 
+		
 		
 		d3.queue()
 		.defer(d3.csv, "deathdays.csv")
@@ -936,6 +995,22 @@
 			plotPumps(data1);
 
 		});
+		
+		function updateData(dayFirst,dayLast)
+		{
+			d3.queue()
+				.defer(d3.csv, "deathsdays.csv")
+				.defer(d3.csv, "deaths_age_sex.csv")
+				.await(function(error, deathsdays, dthas) {
+				if (error){
+					console.error('wrong turn' +error);
+				}
+				else {
+		    		drawDeaths(dthas.slice(deathsdays[dayFirst-1]['total']-1,deathsdays[dayLast-1]['total']-1));
+					}
+		
+				});
+		}
 	</script>
 		
 		<section id="next-section" class="section light-bg">
